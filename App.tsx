@@ -24,7 +24,6 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import NativeSmartad from 'rtn-smartad/js/NativeSmartad';
 
 
 
@@ -65,21 +64,6 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  useEffect(() => {
-    // Verificar si Smartad está disponible
-    if (NativeSmartad) {
-      NativeSmartad.initialize(12345) // Usa un SITE_ID apropiado
-        .then(() => {
-          console.log('Smartad initialized successfully');
-          // Aquí puedes seguir con otras operaciones, como cargar un anuncio
-        })
-        .catch((error) => {
-          console.error('Error initializing Smartad:', error);
-        });
-    } else {
-      console.log('Smartad module is not available');
-    }
-  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
