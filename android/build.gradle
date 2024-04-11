@@ -17,18 +17,4 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
     }
 }
-allprojects {
-	repositories {
-		google()
-		jcenter()
-
-		// add the Smart repository
-		maven { url 'https://packagecloud.io/smartadserver/android/maven2' }
-
-		// Optional: Huawei services dependencies repository
-		maven { url 'https://developer.huawei.com/repo/' }
-
-		// …
-	}
-}
 apply plugin: "com.facebook.react.rootproject"

@@ -102,10 +102,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_1_8
-        sourceCompatibility = JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
@@ -118,11 +114,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    // Add Smart Instream SDK
-	implementation 'com.smartadserver.android:smart-instream-sdk:7.24.1'
-
-	// Optional : add Smart support library for Huawei devices
-	implementation 'com.smartadserver.android:smart-core-sdk-huawei-support:1.0.0'
-}
+    }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
