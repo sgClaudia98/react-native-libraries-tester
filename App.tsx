@@ -5,9 +5,10 @@
  * @format
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -24,8 +25,10 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
-
+// Import RTN Calculator
+import RTNCalculator from "rtn-calculator/js/NativeCalculator";
+// Import RTN Centered Text
+import RTNCenteredText from "rtn-centered-text/js/RTNCenteredTextNativeComponent";
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -59,7 +62,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [result, setResult] = useState<number | null>(null);
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -71,11 +74,27 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+    {/* RTN Calculator */}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
-        <View
+        <Text style={{ marginLeft: 20, marginTop: 20 }}>
+        3+7={result ?? "??"}
+      </Text>
+      <Button
+        title="Compute"
+        onPress={async () => {
+          const value = await RTNCalculator?.add(3, 7);
+          setResult(value ?? null);
+        }}
+      />
+      {/* RTN Centered Text */}
+      <RTNCenteredText
+      text={"Hello World!"}
+      style={{ width: "100%", height: 30 }}
+    />
+        {/* <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
@@ -93,7 +112,7 @@ function App(): React.JSX.Element {
             Read the docs to discover what to do next:
           </Section>
           <LearnMoreLinks />
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
