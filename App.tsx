@@ -25,6 +25,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import PlayerSample from './components/BitmovinPlayer';
+import PlayerSampleAudio from './components/BitmovinPlayerAudio';
 
 
 
@@ -76,7 +77,7 @@ function App(): React.JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
-        <PlayerSample/>
+        <PlayerSampleAudio/>
         {/* <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
