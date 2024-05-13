@@ -28,7 +28,6 @@ import PlayerSample from './components/BitmovinPlayer';
 import PlayerSampleAudio from './components/BitmovinPlayerAudio';
 
 
-
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -77,8 +76,10 @@ function App(): React.JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
-        <PlayerSampleAudio/>
-        {/* <View
+        <PlayerSample/>
+        {/*
+        
+        <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>

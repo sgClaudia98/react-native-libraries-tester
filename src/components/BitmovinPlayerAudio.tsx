@@ -28,11 +28,12 @@ export default function PlayerSampleAudio() {
     //
     // Head to `Configuring your License` for more information.
     licenseKey: '9a30c8cf-d987-4234-91f8-095eaf66cf56',
+    /*
     analyticsConfig: {
       // Bitmovin analytics key from the Analytics Dashboard
       licenseKey: 'b4289f8e-e3a7-4cb2-94cc-ab06a73ea4d8',
-    },
-    /*
+    },*/
+    
     advertisingConfig: {
       // Each object in `schedule` represents an `AdItem`.
       schedule: [
@@ -44,20 +45,19 @@ export default function PlayerSampleAudio() {
           sources: [
             {
               type: AdSourceType.IMA,
-              tag: 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dskippablelinear&correlator=',
+              tag: 'https://api-media.ccma.cat/pvideo/media.jsp?media=video&versio=ima&idint=6277132&profile=pc_3cat&format=dm',
             },
             // Fallback sources...
           ],
           // Each item also specifies the position where it should appear during playback.
           // The possible position values are documented below.
           // The default value is `pre`.
-          position: '20%',
+          //position: '20%',
         },
       ],
     },
-    */
+    
   });
-
   useEffect(() => {
     console.log('PLAYER!!!', player);
     // iOS audio session category must be set to `playback` first, otherwise playback
@@ -72,29 +72,31 @@ export default function PlayerSampleAudio() {
     });
 
     player.load({
-      url: 'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-      type: SourceType.HLS,
+      url: 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_30mb.mp4',
+      type: SourceType.PROGRESSIVE,
       title: 'Art of Motion',
+      /*
       analyticsSourceMetadata: {
         videoId: 'reactnative-wizard-Art_of_Motion-1715012356323',
         title: 'Art of Motion',
         isLive: false,
-      }, });
-  }, [player]);
+      },
+      */
+    });
+  }, [player.isInitialized]);
 
   // onReady is called when the player has downloaded initial
   // video and audio and is ready to start playback.
   const onReady = useCallback(
     (event: ReadyEvent) => {
       // Start playback
+      console.log("On ready")
       player.play();
       console.log(event.timestamp);
-      setIsPlaying(true)
+      setIsPlaying(true);
     },
-    [player]
+    [player],
   );
-
-
 
   const togglePlayback = () => {
     if (player.isInitialized) {
@@ -109,16 +111,16 @@ export default function PlayerSampleAudio() {
 
   const skipBackward = async () => {
     const currentTime = await player.getCurrentTime();
-    let newTime = Math.max(currentTime - 10, 0 );
+    let newTime = Math.max(currentTime - 10, 0);
     player.seek(newTime);
   };
 
   const skipForward = async () => {
     const currentTime = await player.getCurrentTime();
     const maxTime = await player.getDuration();
-    let newTime = Math.min(currentTime + 10, maxTime );
+    let newTime = Math.min(currentTime + 10, maxTime);
     player.seek(newTime);
-    player.getPlaybackSpeed
+    player.getPlaybackSpeed;
   };
 
   const onSliderChange = (value: number) => {
@@ -127,39 +129,50 @@ export default function PlayerSampleAudio() {
   };
 
   useEffect(() => {
-    /*
     if (player.isInitialized) {
-
+      console.log("Initialized")
       const timer = setInterval(async () => {
         const time = await player.getCurrentTime();
         setCurrentTime(time);
         const duration = await player.getDuration();
         setMaxTime(duration);
-        
       }, 1000);
-      
+
       return () => clearInterval(timer);
-    } 
-    */
+    }
   }, [player.isInitialized]);
 
   return (
     <View style={styles.container}>
-      <PlayerView player={player} onReady={onReady} style={styles.audioPlayer} />
+      <PlayerView
+        player={player}
+        onPlayerError={() => console.log('player error')}
+        onAdError={() => console.log('AD error')}
+        onSourceError={() => console.log('source error')}
+        onAdFinished={() => {
+          console.log('ad finish')
+          player.play();
+        }
+         }
+        onReady={onReady}
+        style={styles.audioPlayer}
+        onAdBreakStarted={() => console.log('ad started')}
+        onAdBreakFinished={() => console.log('ad finish')}
+      />
       <View style={styles.controls}>
         <View style={styles.leftControls}>
           <Text>I M</Text>
           <Text>Hola HOla</Text>
           <View style={styles.progressContainer}>
-        <Slider
-          value={currentTime}
-          maximumValue={maxTime}
-          minimumValue={0}
-          minimumTrackTintColor="blue"
-          maximumTrackTintColor="grey"
-          onValueChange={onSliderChange}
-        />
-      </View>
+            <Slider
+              value={currentTime}
+              maximumValue={maxTime}
+              minimumValue={0}
+              minimumTrackTintColor="blue"
+              maximumTrackTintColor="grey"
+              onValueChange={onSliderChange}
+            />
+          </View>
         </View>
         <View style={styles.rightControls}>
           <Button title="-" color="black" onPress={skipBackward} />
@@ -212,6 +225,6 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     padding: 0,
-    width: "100%",
+    width: '100%',
   },
 });

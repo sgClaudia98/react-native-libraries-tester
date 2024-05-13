@@ -1,5 +1,5 @@
-import React, {useEffect, useCallback} from 'react';
-import {View, Platform, StyleSheet, Button} from 'react-native';
+import React, {useEffect, useCallback, useState} from 'react';
+import {View, Platform, StyleSheet, Button, FlatList, FlatListComponent, Text, ListRenderItem} from 'react-native';
 import {
   usePlayer,
   SourceType,
@@ -7,14 +7,18 @@ import {
   AudioSession,
   AdSourceType,
 } from 'bitmovin-player-react-native';
+import { mockApiMedia } from '../data/MockApiMedia';
+import { getAdItems, getSourceConfig } from '../utils/media';
 
 export default function PlayerSample() {
+  const MOCK = mockApiMedia;
   const player = usePlayer({
     // The only required parameter is the license key but it can be omitted from code upon correct
     // Info.plist/AndroidManifest.xml configuration.
     //
     // Head to `Configuring your License` for more information.
     licenseKey: '9a30c8cf-d987-4234-91f8-095eaf66cf56',
+    /*
     advertisingConfig: {
       // Each object in `schedule` represents an `AdItem`.
       schedule: [
@@ -33,15 +37,14 @@ export default function PlayerSample() {
           // Each item also specifies the position where it should appear during playback.
           // The possible position values are documented below.
           // The default value is `pre`.
-          position: '20%',
+          //position: '20%',
         },
       ],
-    },
-  }
-  );
-  
+    },*/
+  });
+
   useEffect(() => {
-    console.log("PLAYER!!!", player)
+    console.log("Player set")
     // iOS audio session category must be set to `playback` first, otherwise playback
     // will have no audio when the device is silenced.
     //
@@ -52,17 +55,14 @@ export default function PlayerSample() {
       // Handle any native errors that might occur while setting the audio's category.
       console.log("Failed to set app's audio category to `playback`:\n", error);
     });
-    
-    player.load({
-      url:
-        Platform.OS === 'ios'
-          ? 'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-          : 'https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd',
-      type: Platform.OS === 'ios' ? SourceType.HLS : SourceType.DASH,
-      title: 'Art of Motion',
-      poster: "https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/poster.jpg"
 
+    player.load(getSourceConfig(MOCK.media, MOCK.informacio.titol, MOCK.imatges.url));
+    console.log("Player load config ")
+    getAdItems(MOCK.publicitat).forEach(element => {
+      player.scheduleAd(element)
+      console.log("Player scheduleAd -> " + element.position)
     });
+    
   }, [player]);
 
   // onReady is called when the player has downloaded initial
@@ -70,29 +70,47 @@ export default function PlayerSample() {
   const onReady = useCallback(
     (event: any) => {
       // Start playback
-      console.log("PLAY!!!")
+      console.log("onReady -> Play")
       player.play();
-      console.log(event.timestamp);
     },
     [player],
   );
 
-  const onPause = () => {
-    player.pause();
-  }
-  
+  useEffect(() => {
+    if (player.isInitialized) {
+      console.log("isInitialized -> " + player.isInitialized)
+      player.isPlaying().then(val => {
+        if (!val) {
+          // player.play()
+        }
+      });
+    }
+  }, [player.isInitialized]);
 
   return (
     <View style={styles.flex1}>
-      <PlayerView style={styles.flex1} player={player} onReady={onReady} />
-      <View>
-      <Button
-  onPress={onPause}
-  title="Pause"
-  color="#841584"
-  accessibilityLabel="Learn more about this purple button"
-/>
-      </View>
+      <PlayerView
+        onPlayerError={() => console.log("onPlayerError -> ")}
+        onAdError={e => console.log("onAdError -> ")}
+        onSourceError={() => console.log("onSourceError -> ")}
+        onPaused={() => console.log("onPause -> ")}
+        onPlay={() => console.log("onPlay -> ")}
+/*
+        onAdBreakStarted={() => console.log('ad break started')}
+        onAdBreakFinished={() => console.log('ad break finish')}
+        onAdScheduled={() => console.log('ad scheduled')}
+        onAdFinished={() => console.log('ad finish')}
+        onAdClicked={()=> console.log('ad clicked') }
+        onAdStarted={() => console.log('ad started')}
+        onAdSkipped={() => console.log('ad skipped')}
+        onAdManifestLoad={() => console.log('ad manifest load')}
+        onAdManifestLoaded={() => console.log('ad manifest loaded')}
+        onAdQuartile={() => console.log('ad quartile')}
+        */
+        style={styles.flex1}
+        player={player}
+        onReady={onReady}
+      />
       
     </View>
   );
@@ -100,8 +118,10 @@ export default function PlayerSample() {
 
 const styles = StyleSheet.create({
   flex1: {
+    display: 'flex',
     flex: 1,
-    minHeight: 200
+    minHeight: 200,
+    minWidth: 400,
+    zIndex: 100,
   },
 });
-
