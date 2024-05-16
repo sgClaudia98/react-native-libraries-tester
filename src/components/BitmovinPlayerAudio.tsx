@@ -16,11 +16,15 @@ import {
   ReadyEvent,
 } from 'bitmovin-player-react-native';
 import Slider from '@react-native-community/slider';
+import {getSourceConfig} from '../utils/media';
+import {mockApiMedia} from '../data/MockApiMedia';
 
 export default function PlayerSampleAudio() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [maxTime, setMaxTime] = useState(100);
+
+  const MOCK = mockApiMedia;
 
   const player = usePlayer({
     // The only required parameter is the license key but it can be omitted from code upon correct
@@ -33,33 +37,9 @@ export default function PlayerSampleAudio() {
       // Bitmovin analytics key from the Analytics Dashboard
       licenseKey: 'b4289f8e-e3a7-4cb2-94cc-ab06a73ea4d8',
     },*/
-    
-    advertisingConfig: {
-      // Each object in `schedule` represents an `AdItem`.
-      schedule: [
-        // An `AdItem` represents a time slot within the streamed content dedicated to ads playback.
-        {
-          // Each item specifies a list of sources with a type and URL to the ad manifest in the ads
-          // server. All but the first source act as fallback if the first one fails to load.
-          // The start and end of an ad break are signaled via `AdBreakStartedEvent` and `AdBreakFinishedEvent`.
-          sources: [
-            {
-              type: AdSourceType.IMA,
-              tag: 'https://api-media.ccma.cat/pvideo/media.jsp?media=video&versio=ima&idint=6277132&profile=pc_3cat&format=dm',
-            },
-            // Fallback sources...
-          ],
-          // Each item also specifies the position where it should appear during playback.
-          // The possible position values are documented below.
-          // The default value is `pre`.
-          //position: '20%',
-        },
-      ],
-    },
-    
   });
   useEffect(() => {
-    console.log('PLAYER!!!', player);
+    console.log('PLAYER!!!');
     // iOS audio session category must be set to `playback` first, otherwise playback
     // will have no audio when the device is silenced.
     //
@@ -71,18 +51,11 @@ export default function PlayerSampleAudio() {
       console.log("Failed to set app's audio category to `playback`:\n", error);
     });
 
-    player.load({
-      url: 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_30mb.mp4',
-      type: SourceType.PROGRESSIVE,
-      title: 'Art of Motion',
-      /*
-      analyticsSourceMetadata: {
-        videoId: 'reactnative-wizard-Art_of_Motion-1715012356323',
-        title: 'Art of Motion',
-        isLive: false,
-      },
-      */
-    });
+    // Source
+    player.load(getSourceConfig(MOCK));
+    console.log('Player load config ');
+
+    // Advertising
   }, [player.isInitialized]);
 
   // onReady is called when the player has downloaded initial
@@ -90,7 +63,7 @@ export default function PlayerSampleAudio() {
   const onReady = useCallback(
     (event: ReadyEvent) => {
       // Start playback
-      console.log("On ready")
+      console.log('On ready');
       player.play();
       console.log(event.timestamp);
       setIsPlaying(true);
@@ -98,6 +71,7 @@ export default function PlayerSampleAudio() {
     [player],
   );
 
+  // Play/Pause
   const togglePlayback = () => {
     if (player.isInitialized) {
       if (isPlaying) {
@@ -109,12 +83,14 @@ export default function PlayerSampleAudio() {
     }
   };
 
+  // Backwards
   const skipBackward = async () => {
     const currentTime = await player.getCurrentTime();
     let newTime = Math.max(currentTime - 10, 0);
     player.seek(newTime);
   };
 
+  // Forward
   const skipForward = async () => {
     const currentTime = await player.getCurrentTime();
     const maxTime = await player.getDuration();
@@ -123,14 +99,16 @@ export default function PlayerSampleAudio() {
     player.getPlaybackSpeed;
   };
 
+  // Seek
   const onSliderChange = (value: number) => {
     player.seek(value);
     setCurrentTime(value);
   };
 
+  // Listener position
   useEffect(() => {
     if (player.isInitialized) {
-      console.log("Initialized")
+      console.log('Initialized');
       const timer = setInterval(async () => {
         const time = await player.getCurrentTime();
         setCurrentTime(time);
@@ -143,47 +121,44 @@ export default function PlayerSampleAudio() {
   }, [player.isInitialized]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.controls}>
       <PlayerView
         player={player}
         onPlayerError={() => console.log('player error')}
         onAdError={() => console.log('AD error')}
         onSourceError={() => console.log('source error')}
         onAdFinished={() => {
-          console.log('ad finish')
+          console.log('ad finish');
           player.play();
-        }
-         }
+        }}
         onReady={onReady}
         style={styles.audioPlayer}
         onAdBreakStarted={() => console.log('ad started')}
         onAdBreakFinished={() => console.log('ad finish')}
       />
-      <View style={styles.controls}>
-        <View style={styles.leftControls}>
-          <Text>I M</Text>
-          <Text>Hola HOla</Text>
-          <View style={styles.progressContainer}>
-            <Slider
-              value={currentTime}
-              maximumValue={maxTime}
-              minimumValue={0}
-              minimumTrackTintColor="blue"
-              maximumTrackTintColor="grey"
-              onValueChange={onSliderChange}
-            />
-          </View>
-        </View>
-        <View style={styles.rightControls}>
-          <Button title="-" color="black" onPress={skipBackward} />
-          <Button
-            title={isPlaying ? 'pause' : 'play'}
-            color="black"
-            onPress={togglePlayback}
+      <View style={styles.leftControls}>
+        <Text>{'<i> <i>'}</Text>
+        <Text>{MOCK.informacio.titol}</Text>
+        <View style={styles.progressContainer}>
+          <Slider
+            value={currentTime}
+            maximumValue={maxTime}
+            minimumValue={0}
+            minimumTrackTintColor="blue"
+            maximumTrackTintColor="grey"
+            onValueChange={onSliderChange}
           />
-
-          <Button title="+" color="black" onPress={skipForward} />
         </View>
+      </View>
+      <View style={styles.rightControls}>
+        <Button title="-" color="black" onPress={skipBackward} />
+        <Button
+          title={isPlaying ? 'pause' : 'play'}
+          color="black"
+          onPress={togglePlayback}
+        />
+
+        <Button title="+" color="black" onPress={skipForward} />
       </View>
     </View>
   );
@@ -197,17 +172,18 @@ const styles = StyleSheet.create({
   },
   controls: {
     paddingVertical: 5,
+    width: '100%',
     position: 'absolute',
     bottom: 0,
-    width: '100%',
+    left: 0,
+    minHeight: 100,
+    minWidth: 200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'lightgrey',
     paddingHorizontal: 10,
-  },
-  container: {
-    flex: 1,
+    zIndex: 200,
   },
   leftControls: {
     flex: 1,

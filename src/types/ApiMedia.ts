@@ -164,12 +164,26 @@ export interface Relacionats {
 export interface Recomanats {
   url: string;
 }
+export interface AdobeAnalytics {
+  id: string;
+  mediaType: string;
+  'op-capitol': string;
+  compte: string;
+  nom: string;
+  durada: number;
+  reproductor: string;
+  directe: boolean;
+  tipus: string;
+  parametres: {
+    [key: string]: string | number;
+  };
+}
 
 export interface Audiencies {
-  sitecatalyst: SiteCatalyst;
-  matr: Matr;
-  kantarst: Kantarst;
-  
+  sitecatalyst?: SiteCatalyst;
+  matr?: Matr;
+  kantarst?: Kantarst;
+  adobe_analytics?: AdobeAnalytics;
 }
 
 export interface ApiMediaCCMA {

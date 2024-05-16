@@ -1,7 +1,11 @@
-import { AdItem, AdSourceType, SourceConfig, SourceType } from "bitmovin-player-react-native";
-import { Media, Publicitat } from "../types/ApiMedia";
+import { AdItem, AdSourceType, SideLoadedSubtitleTrack, SourceConfig, SourceType, SubtitleFormat } from "bitmovin-player-react-native";
+import { ApiMediaCCMA, Media, Publicitat, Subtitol } from "../types/ApiMedia";
 
-export function getSourceConfig(media: Media, title: string, poster: string): SourceConfig {
+export function getSourceConfig(config: ApiMediaCCMA): SourceConfig {
+    const media: Media = config.media;
+    const title = config.informacio.titol;
+    const poster = config.imatges.url;
+
     let selectedUrl: string | undefined;
     let selectedLabel: 'DASH' | 'HLS' | 'PROGRESSIVE' | undefined;
   
@@ -23,14 +27,26 @@ export function getSourceConfig(media: Media, title: string, poster: string): So
       }
     }
   
+
     const sourceConfig: SourceConfig = {
       url: selectedUrl || '',
       type: selectedLabel ? SourceType[selectedLabel] : SourceType.PROGRESSIVE,
       title,
-      poster
+      poster, 
+      subtitleTracks: config.subtitols.map(s=>createSideLoadedSubtitleTrack(s))
     };
   
     return sourceConfig;
+  }
+
+
+  function createSideLoadedSubtitleTrack(data: Subtitol): SideLoadedSubtitleTrack {
+    return {
+      url: data.url || '',
+      label: data.text || '',
+      language: data.iso || '',
+      format: data.format as SubtitleFormat // Necesario asegurarse que es del tipo correcto
+    };
   }
 
 export function getAdItems(publicitat: Publicitat): AdItem[] {

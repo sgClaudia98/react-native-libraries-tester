@@ -1,2 +1,7 @@
 <key>BitmovinPlayerLicenseKey</key>  
-<string>YOUR-LICENSE-KEY-HERE</string>
+<string>9a30c8cf-d987-4234-91f8-095eaf66cf56</string>
+
+<key>UIBackgroundModes</key>
+<array>
+  <string>audio</string>
+</array>
