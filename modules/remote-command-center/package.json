@@ -1,0 +1,14 @@
+{
+  "name": "react-native-remote-command-center",
+  "version": "0.0.0",
+  "description": "use of native remote command center for showing event",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "RNRemoteCommandCenterSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
+  "author": " <> ()",
+  "license": "UNLICENSED",
+  "homepage": "#readme"
+}

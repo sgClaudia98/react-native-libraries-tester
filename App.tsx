@@ -25,10 +25,11 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import NativeRemoteCommandCenter from './modules/remote-command-center/src/NativeRemoteCommandCenter';
 // Import RTN Calculator
-import RTNCalculator from "rtn-calculator/js/NativeCalculator";
+//import RTNCalculator from "rtn-calculator/js/NativeCalculator";
 // Import RTN Centered Text
-import RTNCenteredText from "rtn-centered-text/js/RTNCenteredTextNativeComponent";
+//import RTNCenteredText from "rtn-centered-text/js/RTNCenteredTextNativeComponent";
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -66,7 +67,9 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  const commandCenter = NativeRemoteCommandCenter.setEventListener((event) => {
+    console.log("event", event);
+  })
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -74,7 +77,9 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-    {/* RTN Calculator */}
+
+    <ScrollView>
+    {/* RTN Calculator *
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -89,7 +94,7 @@ function App(): React.JSX.Element {
           setResult(value ?? null);
         }}
       />
-      {/* RTN Centered Text */}
+      {/* RTN Centered Text *
       <RTNCenteredText
       text={"Hello World!"}
       style={{ width: "100%", height: 30 }}
