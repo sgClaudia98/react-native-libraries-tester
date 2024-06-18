@@ -1,0 +1,14 @@
+{
+  "name": "react-native-media-controls",
+  "version": "0.0.0",
+  "description": "bridge for Remote Command Center and Media Session",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "RNMediaControlsSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
+  "author": " <> ()",
+  "license": "UNLICENSED",
+  "homepage": "#readme"
+}
