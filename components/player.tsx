@@ -1,49 +1,58 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
-import { NativeEventEmitter, NativeModules } from 'react-native';
-import { initialize, updateNowPlaying } from 'react-native-media-controls';
-
-const { MediaControls } = NativeModules;
-const mediaControlsEmitter = new NativeEventEmitter(MediaControls);
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { NativeModules } from 'react-native';
+import { initialize, updateNowPlaying, subscribeToMediaControlEvents } from 'react-native-media-controls';
 
 const Player = () => {
+
   useEffect(() => {
+    // Inicializar el módulo nativo
     initialize();
-    updateNowPlaying('Song Title');
 
-    const onPlaySubscription = mediaControlsEmitter.addListener('onPlay', () => {
-      console.log('Play event');
+    // Suscribirse al evento 'updateNowPlaying'
+    const unsubscribeUpdateNowPlaying = subscribeToMediaControlEvents('updateNowPlaying', (eventData) => {
+      console.log('updateNowPlaying event received:', eventData);
+      // Aquí puedes actualizar el estado de tu componente o hacer cualquier otra cosa con los datos del evento
     });
 
-    const onPauseSubscription = mediaControlsEmitter.addListener('onPause', () => {
-      console.log('Pause event');
+    // Suscribirse al evento 'initMediaSession'
+    const unsubscribeInitMediaSession = subscribeToMediaControlEvents('initMediaSession', (eventData) => {
+      console.log('initMediaSession event received:', eventData);
+      // Aquí puedes actualizar el estado de tu componente o hacer cualquier otra cosa con los datos del evento
     });
 
-    const onGoBackSubscription = mediaControlsEmitter.addListener('onGoBack', () => {
-      console.log('Go Back event');
-    });
-
-    const onGoForwardSubscription = mediaControlsEmitter.addListener('onGoForward', () => {
-      console.log('Go Forward event');
-    });
-
+    // Limpiar las suscripciones al desmontar el componente
     return () => {
-      onPlaySubscription.remove();
-      onPauseSubscription.remove();
-      onGoBackSubscription.remove();
-      onGoForwardSubscription.remove();
+      unsubscribeUpdateNowPlaying();
+      unsubscribeInitMediaSession();
     };
   }, []);
+
+  const handleUpdateNowPlaying = () => {
+    updateNowPlaying('New Song Title');
+  };
 
   return (
     <View>
       <Text>Media Player</Text>
-      <Button title="Play" onPress={() => console.log('Play pressed')} />
-      <Button title="Pause" onPress={() => console.log('Pause pressed')} />
-      <Button title="Go Back" onPress={() => console.log('Go Back pressed')} />
-      <Button title="Go Forward" onPress={() => console.log('Go Forward pressed')} />
+      <View style={styles.buttonContainer}>
+        <Button title="Update Now Playing" onPress={handleUpdateNowPlaying} />
+        <Button title="Play" onPress={() => console.log('Play pressed')} disabled/>
+        <Button title="Pause" onPress={() => console.log('Pause pressed')} disabled/>
+        <Button title="Go Back" onPress={() => console.log('Go Back pressed')} disabled/>
+        <Button title="Go Forward" onPress={() => console.log('Go Forward pressed')} disabled/>
+      </View>
+
     </View>
   );
 };
+const styles = StyleSheet.create({
+  buttonContainer: {
+    gap: 5,
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+});
+
 
 export default Player;

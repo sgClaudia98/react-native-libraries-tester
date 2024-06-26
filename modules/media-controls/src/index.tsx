@@ -1,4 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-media-controls' doesn't seem to be linked. Make sure: \n\n` +
@@ -24,10 +24,19 @@ const MediaControls = MediaControlsModule
       }
     );
 
+const eventEmitter = new NativeEventEmitter(MediaControls);
+
 export function initialize(): void {
   MediaControls.initialize();
 }
 
 export function updateNowPlaying(title: string): void {
   MediaControls.updateNowPlaying(title);
+}
+
+export function subscribeToMediaControlEvents(eventName: string, handler: (...args: any[]) => void) {
+  const subscription = eventEmitter.addListener(eventName, handler);
+  return () => {
+    subscription.remove();
+  };
 }
