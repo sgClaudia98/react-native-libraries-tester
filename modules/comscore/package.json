@@ -1,0 +1,14 @@
+{
+  "name": "react-native-comscore",
+  "version": "0.0.0",
+  "description": "Comscore implementation for React Native using Java code",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "RNComscoreSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
+  "author": " <> ()",
+  "license": "UNLICENSED",
+  "homepage": "#readme"
+}

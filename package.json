@@ -12,9 +12,7 @@
   "dependencies": {
     "react": "18.2.0",
     "react-native": "0.73.6",
-    "react-native-awesome-module": "link:./modules/awesome-module",
-    "react-native-awesome-module2": "link:./modules/awesome-module2",
-    "react-native-media-controls": "link:./modules/media-controls"
+    "react-native-comscore": "link:./modules/comscore"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
