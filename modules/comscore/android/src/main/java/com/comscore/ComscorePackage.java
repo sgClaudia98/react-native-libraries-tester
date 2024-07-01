@@ -1,4 +1,4 @@
-package com.comscore;
+package com.ccma.comscore;
 
 import androidx.annotation.Nullable;
 

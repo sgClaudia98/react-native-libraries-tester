@@ -1,8 +1,9 @@
-package com.comscore;
+package com.ccma.comscore;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReadableMap;
 
 abstract class ComscoreSpec extends ReactContextBaseJavaModule {
   ComscoreSpec(ReactApplicationContext context) {

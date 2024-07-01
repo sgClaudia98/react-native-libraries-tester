@@ -1,4 +1,4 @@
-package com.comscore;
+package com.ccma.comscore;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 

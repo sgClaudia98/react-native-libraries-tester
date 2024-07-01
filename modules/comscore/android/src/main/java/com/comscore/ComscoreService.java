@@ -1,14 +1,24 @@
-package com.comscore;
+package com.ccma.comscore;
 
 import android.util.Log;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReactApplicationContext;
+
+import com.comscore.Analytics;
+import com.comscore.PublisherConfiguration;
+import com.comscore.UsagePropertiesAutoUpdateMode;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ComscoreService {
+
+    private static ReactApplicationContext reactContext;
 
     private static final String CS_FPID = "cs_fpid";
     private static final String CS_FPIT = "cs_fpit";
@@ -16,7 +26,8 @@ public class ComscoreService {
     private static final String CS_FPDT = "cs_fpdt";
     private static final String CS_UCFR = "cs_ucfr";
 
-    public static void initializeComScore(ReadableMap params) {
+    public static void initializeComScore(ReactApplicationContext context, ReadableMap params) {
+        reactContext = context;
         WritableMap writableMap = Arguments.createMap();
         writableMap.merge(params);
 
@@ -103,7 +114,7 @@ public class ComscoreService {
         //  Test Mode output the request URLs on standard output
         Analytics.getConfiguration().enableImplementationValidationMode(); //TODO: Remove for Production
         // Start the ComScore library
-        Analytics.start(ReactApplicationContextProvider.getInstance().get());
+        Analytics.start(reactContext);
     }
 
     public static void updateConsent(String consentValue) {
@@ -190,17 +201,12 @@ public class ComscoreService {
         }
     }
 
-    private static void trackMediaOnBackground(boolean state) {
-        try {
+    public static void trackMediaOnBackground(boolean state) {
+       
           if (state == true) {
             Analytics.notifyUxActive();
           } else {
             Analytics.notifyUxInactive();
           }
-          promise.resolve();
-        } catch (Exception e) {
-          Log.e("ComScoreModule", "Error updating trackMediaOnBackground", e);
-          promise.reject("Error updating trackMediaOnBackground");
-        }
       }
 }

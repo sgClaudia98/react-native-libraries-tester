@@ -43,7 +43,7 @@ def supportsNamespace() {
 
 android {
   if (supportsNamespace()) {
-    namespace "com.comscore"
+    namespace "com.ccma.comscore"
 
     sourceSets {
       main {
@@ -114,6 +114,6 @@ if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "Comscore"
-    codegenJavaPackageName = "com.comscore"
+    codegenJavaPackageName = "com.ccma.comscore"
   }
 }
