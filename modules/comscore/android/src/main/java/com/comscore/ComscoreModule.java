@@ -25,7 +25,7 @@ public class ComscoreModule extends ComscoreSpec {
     public void initializeComScore(ReadableMap params, Promise promise) {
         try {
             ComscoreService.initializeComScore(getReactApplicationContext(), params);
-            //promise.resolve();
+            promise.resolve(true);
         } catch (Exception e) {
             Log.e("ComscoreModule", "Error initializing ComScore", e);
             promise.reject("Error initializing ComScore");
@@ -36,7 +36,7 @@ public class ComscoreModule extends ComscoreSpec {
     public void updateConsent(String consentValue, Promise promise) {
         try {
             ComscoreService.updateConsent(consentValue);
-            //promise.resolve();
+            promise.resolve(true);
         } catch (Exception e) {
             Log.e("ComscoreModule", "Error updating consent", e);
             promise.reject("Error updating consent");
@@ -47,7 +47,7 @@ public class ComscoreModule extends ComscoreSpec {
     public void trackScreen(String pageName, Promise promise) {
         try {
             ComscoreService.trackScreen(pageName);
-            //promise.resolve();
+            promise.resolve(true);
         } catch (Exception e) {
             Log.e("ComscoreModule", "Error tracking screen", e);
             promise.reject("Error tracking screen");
@@ -58,7 +58,7 @@ public class ComscoreModule extends ComscoreSpec {
     public void trackScreenWithData(String pageName, ReadableMap additionalParams, Promise promise) {
         try {
             ComscoreService.trackScreenWithData(pageName, additionalParams);
-            //promise.resolve();
+            promise.resolve(true);
         } catch (Exception e) {
             Log.e("ComscoreModule", "Error tracking screen with data", e);
             promise.reject("Error tracking screen with data");
@@ -69,20 +69,32 @@ public class ComscoreModule extends ComscoreSpec {
     public void update1PData(ReadableMap params, Promise promise) {
         try {
             ComscoreService.update1PData(params);
-            //promise.resolve();
+            promise.resolve(true);
         } catch (Exception e) {
             Log.e("ComscoreModule", "Error updating 1P data", e);
             promise.reject("Error updating 1P data");
         }
     }
 
+    @ReactMethod
+    public ComscoreStreamingTagService createStreamingService(ReadableMap implementationDetails, Promise promise) {
+        try {
+        promise.resolve( new ComscoreStreamingTagService(implementationDetails));
+        } catch {
+            Log.e("ComscoreModule", "Error createStreamingService", e);
+            promise.reject("Error createStreamingService");
+        }
+    }
+
+    /*
     public void trackMediaOnBackground(boolean state, Promise promise) {
       try {
         ComscoreService.trackMediaOnBackground(state);
-        //promise.resolve();
+        promise.resolve(true);
       } catch (Exception e) {
         Log.e("ComScoreModule", "Error updating trackMediaOnBackground", e);
         promise.reject("Error updating trackMediaOnBackground");
       }
     }
+       */
 }

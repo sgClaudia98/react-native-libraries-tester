@@ -34,4 +34,19 @@ type ComScoreParams = {
   data_1p?: Data1p; // First-party data parameters.
 };
 
-export type {UsagePropertiesAutoUpdateMode, Data1p, CommunicatingUserConsentValue, ComScoreParams}
+type ComscoreStreamingTagService = {
+  start(contentMetadata: any): void;
+  end(): void;
+  adStart(adMetadata: any): void;
+  adEnd(): void;
+  bufferStart(): void;
+  bufferStop(): void;
+  seekStart(): void;
+  seekEnd(seekData: any): void;
+  play(): void;
+  pause():void;
+  destroy(): void;
+  restart(implementationDetails: any): void;
+};
+
+export type {UsagePropertiesAutoUpdateMode, Data1p, CommunicatingUserConsentValue, ComScoreParams, ComscoreStreamingTagService}

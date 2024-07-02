@@ -1,5 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
-import { CommunicatingUserConsentValue, ComScoreParams, Data1p } from './types';
+import { CommunicatingUserConsentValue, ComScoreParams, ComscoreStreamingTagService, Data1p } from './types';
 
 const LINKING_ERROR =
   `The package 'react-native-comscore' doesn't seem to be linked. Make sure: \n\n` +
@@ -25,7 +25,7 @@ const Comscore = ComscoreModule
     }
   );
 
-export function initializeComScore(params: ComScoreParams): Promise<void> {
+export function initializeComScore(params: ComScoreParams): Promise<boolean> {
   try {
     const comScoreParams: Partial<ComScoreParams> = {
       publisherId: params.publisherId,
@@ -48,9 +48,12 @@ export function initializeComScore(params: ComScoreParams): Promise<void> {
     if (params.data_1p !== undefined) {
       comScoreParams.data_1p = params.data_1p;
     }
+    return Comscore.initializeComScore(comScoreParams).then((v: any )=> {
 
     console.log('comScoreInitialized');
-    return Comscore.initializeComScore(comScoreParams);
+    return v
+    }).catch((v: any) => 
+      console.log('comScoreInitialized error', v)); 
 
   } catch (e) {
     console.log('Error in initializing comscore', e);
@@ -58,7 +61,7 @@ export function initializeComScore(params: ComScoreParams): Promise<void> {
   }
 }
 
-export function updateConsent(consentValue: CommunicatingUserConsentValue): Promise<void> {
+export function updateConsent(consentValue: CommunicatingUserConsentValue): Promise<boolean> {
   try {
     return Comscore.updateConsent(consentValue);
   } catch (e) {
@@ -67,9 +70,9 @@ export function updateConsent(consentValue: CommunicatingUserConsentValue): Prom
   }
 }
 
-export function trackScreen(pageName: string): Promise<void> {
+export function trackScreen(pageName: string): Promise<boolean> {
   try {
-    if (pageName === undefined) return Promise.resolve();
+    if (pageName === undefined) return Promise.resolve(false);
     return Comscore.trackScreen(pageName);
   } catch (e) {
     console.log('error in trackScreen : ', e);
@@ -77,9 +80,9 @@ export function trackScreen(pageName: string): Promise<void> {
   }
 }
 
-export function trackScreenWithData(pageName: string, additionalParams: Record<string, any>): Promise<void> {
+export function trackScreenWithData(pageName: string, additionalParams: Record<string, any>): Promise<boolean> {
   try {
-    if (pageName === undefined) return Promise.resolve();
+    if (pageName === undefined) return Promise.resolve(false);
     return Comscore.trackScreenWithData(pageName, additionalParams);
   } catch (e) {
     console.log('error in trackScreen : ', e);
@@ -87,7 +90,7 @@ export function trackScreenWithData(pageName: string, additionalParams: Record<s
   }
 }
 
-export function update1PData(params: Data1p): Promise<void> {
+export function update1PData(params: Data1p): Promise<boolean> {
   try {
     let updatedData1p: Partial<Data1p> = {};
     if (params.publisherId !== undefined) {
@@ -117,5 +120,14 @@ export function update1PData(params: Data1p): Promise<void> {
   } catch (e) {
     console.log('Error in updateConsent', e);
     throw e;
+  }
+}
+
+export function createStreamingService(implementationDetails: any): Promise<ComscoreStreamingTagService> {
+  try {
+    return Comscore.createStreamingService(implementationDetails);
+  } catch (error) {
+    console.error('Error creating streaming service:', error);
+    throw error;
   }
 }

@@ -26,6 +26,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Player from './components/player';
+import * as Comscore from 'react-native-comscore';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -33,7 +34,17 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  
+  useEffect(() => {
+    
+    Comscore.initializeComScore({
+      publisherId: "20296419",    // Para marcar Comscore en la App
+    }).then((v) => {
+      console.log(v)
+      return Comscore.trackScreen("Player")}
+    ).then((v) => {
+      console.log(v)}
+    )
+  },[])
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
