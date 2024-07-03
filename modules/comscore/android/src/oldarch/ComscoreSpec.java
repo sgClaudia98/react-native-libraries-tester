@@ -16,5 +16,5 @@ abstract class ComscoreSpec extends ReactContextBaseJavaModule {
   public abstract void trackScreenWithData(String pageName, ReadableMap additionalParams, Promise promise);
   public abstract void update1PData(ReadableMap params, Promise promise);
   
-  public abstract ComscoreStreamingTagService createStreamingService(ReadableMap implementationDetails, Promise promise);
+  public abstract void createStreamingService(ReadableMap implementationDetails, Promise promise);
 }

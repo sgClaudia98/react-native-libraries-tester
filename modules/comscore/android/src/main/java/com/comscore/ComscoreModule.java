@@ -77,10 +77,10 @@ public class ComscoreModule extends ComscoreSpec {
     }
 
     @ReactMethod
-    public ComscoreStreamingTagService createStreamingService(ReadableMap implementationDetails, Promise promise) {
+    public void createStreamingService(ReadableMap implementationDetails, Promise promise) {
         try {
-        promise.resolve( new ComscoreStreamingTagService(implementationDetails));
-        } catch {
+            promise.resolve( new ComscoreStreamingTagService(implementationDetails));
+        } catch (Exception e){
             Log.e("ComscoreModule", "Error createStreamingService", e);
             promise.reject("Error createStreamingService");
         }
